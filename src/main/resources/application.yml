@@ -1,0 +1,65 @@
+spring:
+  application:
+    name: ticket-booking-system
+
+  datasource:
+    url: ${DATABASE_URL:jdbc:postgresql://localhost:5432/ticket_booking_db}
+    username: ${DATABASE_USERNAME:postgres}
+    password: ${DATABASE_PASSWORD:postgres}
+    driver-class-name: org.postgresql.Driver
+    hikari:
+      maximum-pool-size: ${DB_POOL_MAX_SIZE:20}
+      minimum-idle: ${DB_POOL_MIN_IDLE:5}
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+
+  jpa:
+    open-in-view: false
+    hibernate:
+      ddl-auto: ${HIBERNATE_DDL_AUTO:update}
+    show-sql: false
+    properties:
+      hibernate:
+        format_sql: false
+
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+      password: ${REDIS_PASSWORD:}
+      timeout: 2000ms
+
+  kafka:
+    bootstrap-servers: ${KAFKA_BOOTSTRAP_SERVERS:localhost:9092}
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.springframework.kafka.support.serializer.JsonSerializer
+      acks: 1
+      retries: 3
+    consumer:
+      group-id: ${KAFKA_CONSUMER_GROUP_ID:notification-service-group}
+      auto-offset-reset: earliest
+      key-deserializer: org.apache.kafka.common.serialization.StringDeserializer
+      value-deserializer: org.springframework.kafka.support.serializer.JsonDeserializer
+      properties:
+        spring.json.trusted.packages: "*"
+
+ticket:
+  booking:
+    jwt:
+      secret: ${JWT_SECRET:ticketBookingSystemSecureJwtSecretKeyMustBeAtLeast256BitsLong2026}
+      expiration-ms: ${JWT_EXPIRATION_MS:86400000}
+    seat-lock-ttl-seconds: ${SEAT_LOCK_TTL_SECONDS:300}
+
+server:
+  port: ${SERVER_PORT:8080}
+  error:
+    include-message: always
+    include-binding-errors: always
+
+logging:
+  level:
+    com.example.ticketbooking: INFO
+    org.springframework.security: WARN
+    org.hibernate.SQL: WARN
