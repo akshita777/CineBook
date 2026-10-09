@@ -6,6 +6,10 @@ import { ProtectedRoute } from './components/ProtectedRoute';
 import { Home } from './pages/Home';
 import { Login } from './pages/Login';
 import { Register } from './pages/Register';
+import { MovieDetails } from './pages/MovieDetails';
+import { SeatSelection } from './pages/SeatSelection';
+import { Booking } from './pages/Booking';
+import { Confirmation } from './pages/Confirmation';
 import { MyBookings } from './pages/MyBookings';
 
 function App() {
@@ -16,6 +20,32 @@ function App() {
         <main className="container">
           <Routes>
             <Route path="/" element={<Home />} />
+            <Route path="/movies/:id" element={<MovieDetails />} />
+            <Route path="/shows/:showId/seats" element={<SeatSelection />} />
+            <Route
+              path="/booking"
+              element={
+                <ProtectedRoute>
+                  <Booking />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/confirmation"
+              element={
+                <ProtectedRoute>
+                  <Confirmation />
+                </ProtectedRoute>
+              }
+            />
+            <Route
+              path="/confirmation/:id"
+              element={
+                <ProtectedRoute>
+                  <Confirmation />
+                </ProtectedRoute>
+              }
+            />
             <Route path="/login" element={<Login />} />
             <Route path="/register" element={<Register />} />
             <Route

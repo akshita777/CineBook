@@ -11,6 +11,12 @@ export const Navbar = () => {
     navigate('/login');
   };
 
+  const displayName = user?.fullName
+    ? user.fullName.split(' ')[0]
+    : user?.email
+    ? user.email.split('@')[0]
+    : 'User';
+
   return (
     <nav style={styles.nav}>
       <div style={styles.container}>
@@ -30,9 +36,13 @@ export const Navbar = () => {
               </Link>
               <div style={styles.userSection}>
                 <span style={styles.userGreeting}>
-                  Hi, <strong>{user?.fullName || user?.email}</strong>
+                  Hi, <strong>{displayName}</strong>
                 </span>
-                <button onClick={handleLogout} style={styles.logoutBtn}>
+                <button
+                  onClick={handleLogout}
+                  style={styles.logoutBtn}
+                  aria-label="Logout of CineBook"
+                >
                   Logout
                 </button>
               </div>
@@ -57,7 +67,7 @@ const styles = {
   nav: {
     backgroundColor: '#181818',
     borderBottom: '1px solid #2e2e2e',
-    padding: '14px 0',
+    padding: '12px 0',
     position: 'sticky',
     top: 0,
     zIndex: 100,
@@ -65,13 +75,15 @@ const styles = {
   container: {
     maxWidth: '1200px',
     margin: '0 auto',
-    padding: '0 20px',
+    padding: '0 16px',
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
+    flexWrap: 'wrap',
+    gap: '12px',
   },
   brand: {
-    fontSize: '1.5rem',
+    fontSize: '1.45rem',
     fontWeight: '800',
     letterSpacing: '0.5px',
     color: '#ffffff',
@@ -82,22 +94,22 @@ const styles = {
   navLinks: {
     display: 'flex',
     alignItems: 'center',
-    gap: '20px',
+    gap: '14px',
+    flexWrap: 'wrap',
   },
   link: {
     color: '#cccccc',
-    fontSize: '0.95rem',
+    fontSize: '0.92rem',
     fontWeight: '500',
     transition: 'color 0.2s',
   },
   userSection: {
     display: 'flex',
     alignItems: 'center',
-    gap: '14px',
-    marginLeft: '10px',
+    gap: '10px',
   },
   userGreeting: {
-    fontSize: '0.9rem',
+    fontSize: '0.88rem',
     color: '#aaaaaa',
   },
   logoutBtn: {
@@ -106,27 +118,27 @@ const styles = {
     color: '#cccccc',
     padding: '6px 12px',
     borderRadius: '4px',
-    fontSize: '0.85rem',
+    fontSize: '0.82rem',
     cursor: 'pointer',
     transition: 'all 0.2s',
   },
   authButtons: {
     display: 'flex',
     alignItems: 'center',
-    gap: '12px',
+    gap: '10px',
   },
   loginLink: {
     color: '#ffffff',
-    fontSize: '0.9rem',
-    padding: '6px 14px',
+    fontSize: '0.88rem',
+    padding: '6px 12px',
     borderRadius: '4px',
     border: '1px solid #444',
   },
   registerLink: {
     backgroundColor: '#e50914',
     color: '#ffffff',
-    fontSize: '0.9rem',
-    padding: '6px 14px',
+    fontSize: '0.88rem',
+    padding: '6px 12px',
     borderRadius: '4px',
     fontWeight: '600',
   },

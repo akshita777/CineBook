@@ -44,3 +44,20 @@ button:disabled {
   margin: 0 auto;
   padding: 20px;
 }
+
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+@media (max-width: 600px) {
+  .container {
+    padding: 12px;
+  }
+}
+

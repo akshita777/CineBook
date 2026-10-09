@@ -132,7 +132,7 @@ const styles = {
     backgroundColor: '#1c1c1c',
     border: '1px solid #2e2e2e',
     borderRadius: '8px',
-    padding: '36px 32px',
+    padding: '32px 20px',
     width: '100%',
     maxWidth: '420px',
     boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
