@@ -94,7 +94,7 @@ export const Register = () => {
               placeholder="e.g. John Doe"
               style={{
                 ...styles.input,
-                borderColor: validationErrors.fullName ? '#e50914' : '#3a3a3a',
+                borderColor: validationErrors.fullName ? '#e50914' : '#282834',
               }}
               disabled={loading}
               autoComplete="name"
@@ -114,7 +114,7 @@ export const Register = () => {
               placeholder="name@example.com"
               style={{
                 ...styles.input,
-                borderColor: validationErrors.email ? '#e50914' : '#3a3a3a',
+                borderColor: validationErrors.email ? '#e50914' : '#282834',
               }}
               disabled={loading}
               autoComplete="email"
@@ -134,7 +134,7 @@ export const Register = () => {
               placeholder="••••••••"
               style={{
                 ...styles.input,
-                borderColor: validationErrors.password ? '#e50914' : '#3a3a3a',
+                borderColor: validationErrors.password ? '#e50914' : '#282834',
               }}
               disabled={loading}
               autoComplete="new-password"
@@ -152,7 +152,10 @@ export const Register = () => {
               value={formData.phoneNumber}
               onChange={handleChange}
               placeholder="+1 555-0199"
-              style={styles.input}
+              style={{
+                ...styles.input,
+                borderColor: '#282834',
+              }}
               disabled={loading}
               autoComplete="tel"
             />
@@ -183,91 +186,106 @@ const styles = {
     padding: '20px',
   },
   card: {
-    backgroundColor: '#1c1c1c',
-    border: '1px solid #2e2e2e',
-    borderRadius: '8px',
-    padding: '32px 20px',
+    backgroundColor: '#141418',
+    border: '2px solid #282834',
+    borderRadius: '2px',
+    padding: '36px 26px',
     width: '100%',
     maxWidth: '460px',
-    boxShadow: '0 8px 24px rgba(0,0,0,0.5)',
+    boxShadow: '4px 4px 0px #000000',
   },
   header: {
-    marginBottom: '24px',
+    marginBottom: '26px',
     textAlign: 'center',
   },
   title: {
     margin: '0 0 8px 0',
-    fontSize: '1.5rem',
-    fontWeight: '700',
+    fontSize: '1.65rem',
+    fontWeight: '900',
     color: '#ffffff',
+    letterSpacing: '-0.3px',
   },
   subtitle: {
     margin: 0,
     fontSize: '0.88rem',
-    color: '#888888',
+    color: '#828294',
     lineHeight: '1.4',
+    fontFamily: 'monospace',
   },
   errorBanner: {
-    backgroundColor: '#3b181b',
-    border: '1px solid #d32f2f',
-    color: '#ef9a9a',
-    padding: '10px 14px',
-    borderRadius: '4px',
-    marginBottom: '18px',
+    backgroundColor: '#201214',
+    border: '2px solid #ef4444',
+    color: '#fca5a5',
+    padding: '12px 14px',
+    borderRadius: '2px',
+    boxShadow: '2px 2px 0px #000000',
+    marginBottom: '20px',
     fontSize: '0.85rem',
+    fontFamily: 'monospace',
+    fontWeight: '700',
   },
   form: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '16px',
+    gap: '18px',
   },
   formGroup: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '6px',
+    gap: '8px',
   },
   label: {
-    fontSize: '0.85rem',
-    fontWeight: '600',
-    color: '#cccccc',
+    fontSize: '0.78rem',
+    fontWeight: '900',
+    fontFamily: 'monospace',
+    letterSpacing: '0.5px',
+    textTransform: 'uppercase',
+    color: '#c2c2d2',
   },
   input: {
-    backgroundColor: '#121212',
-    border: '1px solid #3a3a3a',
-    borderRadius: '4px',
+    backgroundColor: '#0c0c0e',
+    border: '2px solid #282834',
+    borderRadius: '2px',
     padding: '12px 14px',
     color: '#ffffff',
     fontSize: '0.95rem',
+    fontFamily: 'monospace',
     outline: 'none',
-    transition: 'border-color 0.2s',
+    transition: 'border-color 0.15s ease',
   },
   validationText: {
-    color: '#e50914',
-    fontSize: '0.8rem',
+    color: '#f87171',
+    fontSize: '0.78rem',
+    fontFamily: 'monospace',
+    fontWeight: '700',
   },
   submitBtn: {
     marginTop: '8px',
     backgroundColor: '#e50914',
+    border: '2px solid #b80710',
     color: '#ffffff',
-    padding: '12px',
-    fontSize: '1rem',
-    fontWeight: '600',
-    borderRadius: '4px',
-    border: 'none',
+    padding: '13px',
+    fontSize: '0.95rem',
+    fontWeight: '900',
+    fontFamily: 'monospace',
+    letterSpacing: '0.5px',
+    borderRadius: '2px',
     cursor: 'pointer',
-    transition: 'background-color 0.2s',
+    boxShadow: '3px 3px 0px #000000',
+    transition: 'transform 0.1s ease, box-shadow 0.1s ease',
   },
   footer: {
-    marginTop: '24px',
+    marginTop: '26px',
     textAlign: 'center',
-    fontSize: '0.9rem',
+    fontSize: '0.88rem',
+    fontFamily: 'monospace',
   },
   footerText: {
-    color: '#888888',
+    color: '#828294',
   },
   loginLink: {
     color: '#ffffff',
-    fontWeight: '600',
+    fontWeight: '800',
     textDecoration: 'underline',
   },
 };

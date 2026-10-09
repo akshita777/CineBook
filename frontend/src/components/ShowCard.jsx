@@ -26,7 +26,7 @@ export const ShowCard = ({ show }) => {
     <div style={styles.card}>
       <div style={styles.details}>
         <div style={styles.venueRow}>
-          <span style={styles.venueIcon}>📍</span>
+          <span style={styles.venueTag}>LOC</span>
           <span style={styles.venueName}>{show.venueName || 'Venue'}</span>
           <span style={styles.screenBadge}>{show.screenName || 'Screen'}</span>
         </div>
@@ -42,7 +42,7 @@ export const ShowCard = ({ show }) => {
 
       <div style={styles.action}>
         <Link to={`/shows/${show.id}/seats`} style={styles.selectButton}>
-          Select Seats
+          SELECT SEATS →
         </Link>
       </div>
     </div>
@@ -51,71 +51,100 @@ export const ShowCard = ({ show }) => {
 
 const styles = {
   card: {
-    backgroundColor: '#1e1e1e',
-    border: '1px solid #2e2e2e',
-    borderRadius: '8px',
+    backgroundColor: '#141418',
+    border: '2px solid #282834',
+    borderRadius: '2px',
+    boxShadow: '3px 3px 0px #000000',
     padding: '16px 20px',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'space-between',
     gap: '16px',
     flexWrap: 'wrap',
+    transition: 'border-color 0.15s ease, transform 0.15s ease',
   },
   details: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '6px',
+    gap: '8px',
   },
   venueRow: {
     display: 'flex',
     alignItems: 'center',
-    gap: '8px',
+    gap: '10px',
+    flexWrap: 'wrap',
   },
-  venueIcon: {
-    fontSize: '0.9rem',
+  venueTag: {
+    fontSize: '0.68rem',
+    fontWeight: '900',
+    fontFamily: 'monospace',
+    color: '#8e8e9e',
+    backgroundColor: '#1a1a22',
+    border: '1px solid #333342',
+    padding: '2px 6px',
+    borderRadius: '2px',
+    letterSpacing: '0.5px',
   },
   venueName: {
-    fontWeight: '700',
+    fontWeight: '800',
     color: '#ffffff',
-    fontSize: '1rem',
+    fontSize: '1.05rem',
+    letterSpacing: '-0.2px',
   },
   screenBadge: {
-    backgroundColor: '#2b2b2b',
-    color: '#e50914',
+    backgroundColor: '#1a1a24',
+    border: '1px solid #3f3f52',
+    color: '#ff4d58',
     padding: '2px 8px',
-    borderRadius: '4px',
-    fontSize: '0.8rem',
-    fontWeight: '600',
+    borderRadius: '2px',
+    fontSize: '0.75rem',
+    fontWeight: '800',
+    fontFamily: 'monospace',
+    letterSpacing: '0.5px',
+    textTransform: 'uppercase',
   },
   timeRow: {
     display: 'flex',
     alignItems: 'center',
     gap: '12px',
     fontSize: '0.9rem',
-    color: '#bbbbbb',
+    color: '#a0a0b0',
+    flexWrap: 'wrap',
   },
   date: {
-    color: '#dddddd',
+    color: '#d0d0dc',
+    fontWeight: '600',
+    fontFamily: 'monospace',
+    fontSize: '0.88rem',
   },
   timeBadge: {
-    backgroundColor: '#141414',
-    padding: '3px 10px',
-    borderRadius: '4px',
-    border: '1px solid #333333',
+    backgroundColor: '#0c0c0e',
+    padding: '4px 10px',
+    borderRadius: '2px',
+    border: '1.5px solid #282834',
     color: '#ffffff',
-    fontWeight: '600',
+    fontWeight: '700',
+    fontFamily: 'monospace',
+    fontSize: '0.88rem',
   },
   action: {
     marginLeft: 'auto',
   },
   selectButton: {
-    display: 'inline-block',
+    display: 'inline-flex',
+    alignItems: 'center',
+    gap: '6px',
     backgroundColor: '#e50914',
     color: '#ffffff',
-    padding: '8px 18px',
-    borderRadius: '5px',
-    fontWeight: '600',
-    fontSize: '0.9rem',
+    padding: '10px 20px',
+    borderRadius: '2px',
+    border: '2px solid #b80710',
+    boxShadow: '2px 2px 0px #000000',
+    fontWeight: '800',
+    fontSize: '0.85rem',
+    fontFamily: 'monospace',
+    letterSpacing: '0.5px',
     textDecoration: 'none',
+    transition: 'transform 0.1s ease, box-shadow 0.1s ease',
   },
 };

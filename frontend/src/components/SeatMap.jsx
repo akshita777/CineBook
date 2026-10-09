@@ -61,33 +61,34 @@ export const SeatMap = ({
     <div style={styles.container}>
       {/* Cinema Screen Indicator */}
       <div style={styles.screenArea}>
-        <div style={styles.screenCurve}></div>
-        <span style={styles.screenLabel}>SCREEN THIS WAY</span>
+        <div style={styles.screenBar}>
+          <span style={styles.screenLabel}>▲ SCREEN / FRONT OF HOUSE ▲</span>
+        </div>
       </div>
 
       {/* Legend */}
       <div style={styles.legend}>
         <div style={styles.legendItem}>
           <div style={{ ...styles.legendBox, ...styles.seatAvailable }}></div>
-          <span>Available</span>
+          <span>AVAILABLE</span>
         </div>
         <div style={styles.legendItem}>
           <div style={{ ...styles.legendBox, ...styles.seatSelected }}></div>
-          <span>Selected</span>
+          <span>SELECTED</span>
         </div>
         <div style={styles.legendItem}>
           <div style={{ ...styles.legendBox, ...styles.seatLocked }}></div>
-          <span>Locked</span>
+          <span>LOCKED (HELD)</span>
         </div>
         <div style={styles.legendItem}>
           <div style={{ ...styles.legendBox, ...styles.seatBooked }}></div>
-          <span>Booked</span>
+          <span>BOOKED</span>
         </div>
       </div>
 
       {/* Mobile Scroll Hint */}
       <div style={styles.mobileHint}>
-        <span>↔ Scroll horizontally to view all rows and seats</span>
+        <span>[ ↔ SCROLL HORIZONTALLY TO VIEW ALL SEATS ]</span>
       </div>
 
       {/* Seat Rows Grid (Scrollable Container) */}
@@ -133,32 +134,36 @@ const styles = {
     flexDirection: 'column',
     alignItems: 'center',
     width: '100%',
-    padding: '16px 0',
+    padding: '12px 0',
   },
   screenArea: {
-    width: '85%',
-    maxWidth: '540px',
+    width: '90%',
+    maxWidth: '560px',
     textAlign: 'center',
     marginBottom: '28px',
   },
-  screenCurve: {
-    height: '6px',
-    background: 'linear-gradient(90deg, transparent 0%, #e50914 50%, transparent 100%)',
-    borderRadius: '50%',
-    boxShadow: '0 4px 16px rgba(229, 9, 20, 0.5)',
-    marginBottom: '8px',
+  screenBar: {
+    backgroundColor: '#121218',
+    borderTop: '3px solid #e50914',
+    borderBottom: '1px solid #282834',
+    borderLeft: '1px solid #282834',
+    borderRight: '1px solid #282834',
+    borderRadius: '2px',
+    boxShadow: '0 4px 18px rgba(229, 9, 20, 0.25)',
+    padding: '8px 16px',
   },
   screenLabel: {
-    fontSize: '0.75rem',
-    letterSpacing: '3px',
-    color: '#888888',
-    fontWeight: '700',
+    fontSize: '0.72rem',
+    letterSpacing: '2.5px',
+    color: '#a0a0b2',
+    fontWeight: '900',
+    fontFamily: 'monospace',
   },
   legend: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    gap: '20px',
+    gap: '18px',
     marginBottom: '20px',
     flexWrap: 'wrap',
   },
@@ -166,24 +171,30 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: '8px',
-    fontSize: '0.85rem',
-    color: '#bbbbbb',
+    fontSize: '0.75rem',
+    fontWeight: '800',
+    fontFamily: 'monospace',
+    letterSpacing: '0.5px',
+    color: '#a0a0b2',
   },
   legendBox: {
     width: '18px',
     height: '18px',
-    borderRadius: '4px',
+    borderRadius: '2px',
   },
   mobileHint: {
-    color: '#777777',
-    fontSize: '0.78rem',
+    color: '#656578',
+    fontSize: '0.72rem',
+    fontFamily: 'monospace',
+    fontWeight: '700',
+    letterSpacing: '0.5px',
     marginBottom: '14px',
     textAlign: 'center',
   },
   gridContainer: {
     display: 'flex',
     flexDirection: 'column',
-    gap: '12px',
+    gap: '10px',
     width: '100%',
     overflowX: 'auto',
     padding: '10px 4px 16px 4px',
@@ -192,17 +203,18 @@ const styles = {
   rowWrapper: {
     display: 'flex',
     alignItems: 'center',
-    gap: '10px',
+    gap: '12px',
     justifyContent: 'center',
     minWidth: 'max-content',
     margin: '0 auto',
   },
   rowLabel: {
-    width: '24px',
+    width: '26px',
     textAlign: 'center',
-    color: '#888888',
-    fontWeight: '700',
-    fontSize: '0.9rem',
+    color: '#808094',
+    fontWeight: '900',
+    fontFamily: 'monospace',
+    fontSize: '0.88rem',
     userSelect: 'none',
   },
   seatsRow: {
@@ -213,37 +225,39 @@ const styles = {
     width: '38px',
     height: '38px',
     padding: 0,
-    borderRadius: '6px',
+    borderRadius: '2px',
     fontSize: '0.82rem',
-    fontWeight: '600',
+    fontWeight: '800',
+    fontFamily: 'monospace',
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    transition: 'transform 0.15s, background-color 0.15s',
+    transition: 'transform 0.1s ease, border-color 0.1s ease, box-shadow 0.1s ease',
   },
   seatAvailable: {
-    backgroundColor: '#262626',
-    border: '1px solid #444444',
-    color: '#ffffff',
+    backgroundColor: '#16161e',
+    border: '2px solid #2e2e3e',
+    color: '#e2e2ec',
+    boxShadow: '1px 1px 0px #000000',
   },
   seatSelected: {
-    backgroundColor: '#2e7d32',
-    border: '1px solid #4caf50',
+    backgroundColor: '#16a34a',
+    border: '2px solid #22c55e',
     color: '#ffffff',
-    boxShadow: '0 0 8px rgba(76, 175, 80, 0.4)',
-    transform: 'scale(1.05)',
+    boxShadow: '2px 2px 0px #000000',
+    transform: 'scale(1.04)',
   },
   seatLocked: {
-    backgroundColor: '#3d2c14',
-    border: '1px solid #b26a00',
-    color: '#ffa726',
-    opacity: 0.85,
+    backgroundColor: '#2e1c03',
+    border: '2px solid #d97706',
+    color: '#fbbf24',
+    opacity: 0.9,
   },
   seatBooked: {
-    backgroundColor: '#1d1d1d',
-    border: '1px solid #2e2e2e',
-    color: '#555555',
+    backgroundColor: '#0f0f13',
+    border: '2px solid #1a1a22',
+    color: '#454552',
     textDecoration: 'line-through',
-    opacity: 0.6,
+    opacity: 0.65,
   },
 };

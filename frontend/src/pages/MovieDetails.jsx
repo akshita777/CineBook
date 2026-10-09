@@ -6,12 +6,19 @@ import { Loading } from '../components/Loading';
 import { ErrorMessage } from '../components/ErrorMessage';
 import { ShowCard } from '../components/ShowCard';
 
+const POSTER_MAP = {
+  'interstellar': 'https://image.tmdb.org/t/p/w500/gEU2QniE6E77NI6lCU6MxlNBvIx.jpg',
+  'inception': 'https://image.tmdb.org/t/p/w500/edv5CZvWj09upOsy2Y6IwDhK8bt.jpg',
+  'oppenheimer': 'https://image.tmdb.org/t/p/w500/8Gxv8gSFCU0XGDykEGv7zR1n2ua.jpg',
+};
+
 export const MovieDetails = () => {
   const { id: movieId } = useParams();
   const [movie, setMovie] = useState(null);
   const [shows, setShows] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [imgError, setImgError] = useState(false);
 
   const fetchData = async () => {
     setLoading(true);
@@ -37,13 +44,13 @@ export const MovieDetails = () => {
   }, [movieId]);
 
   if (loading) {
-    return <Loading message="Loading movie details and shows..." />;
+    return <Loading message="Loading feature details and showtimes..." />;
   }
 
   if (error) {
     return (
       <div style={styles.page}>
-        <Link to="/" style={styles.backLink}>← Back to Movies</Link>
+        <Link to="/" style={styles.backBtn}>← BACK TO CATALOG</Link>
         <ErrorMessage message={error} onRetry={fetchData} />
       </div>
     );
@@ -52,19 +59,21 @@ export const MovieDetails = () => {
   if (!movie) {
     return (
       <div style={styles.page}>
-        <Link to="/" style={styles.backLink}>← Back to Movies</Link>
-        <div style={styles.notFound}>Movie not found</div>
+        <Link to="/" style={styles.backBtn}>← BACK TO CATALOG</Link>
+        <div style={styles.notFound}>Movie not found in archive.</div>
       </div>
     );
   }
+
+  const posterUrl = POSTER_MAP[movie.title?.toLowerCase()?.trim()];
 
   const formatDuration = (mins) => {
     if (!mins) return 'N/A';
     const hours = Math.floor(mins / 60);
     const minutes = mins % 60;
-    if (hours > 0 && minutes > 0) return `${hours}h ${minutes}m`;
-    if (hours > 0) return `${hours}h`;
-    return `${minutes} mins`;
+    if (hours > 0 && minutes > 0) return `${hours}H ${minutes}M`;
+    if (hours > 0) return `${hours}H`;
+    return `${minutes}M`;
   };
 
   // Group shows by venue name to reflect Venue -> Screen -> Show hierarchy
@@ -82,19 +91,33 @@ export const MovieDetails = () => {
   return (
     <div style={styles.page}>
       <div style={styles.navBar}>
-        <Link to="/" style={styles.backLink}>← Back to Movies</Link>
+        <Link to="/" style={styles.backBtn}>
+          ← BACK TO CATALOG
+        </Link>
       </div>
 
       {/* Movie Details Header */}
-      <div style={styles.hero}>
-        <div style={styles.heroPoster}>
-          <div style={styles.posterIcon}>🎬</div>
+      <section style={styles.hero}>
+        <div style={styles.posterContainer}>
+          {posterUrl && !imgError ? (
+            <img
+              src={posterUrl}
+              alt={movie.title}
+              onError={() => setImgError(true)}
+              style={styles.heroPosterImg}
+            />
+          ) : (
+            <div style={styles.heroPosterFallback}>
+              <span style={styles.posterIcon}>🎬</span>
+              <span style={styles.fallbackStamp}>FEATURE</span>
+            </div>
+          )}
         </div>
 
         <div style={styles.heroContent}>
           <div style={styles.badgeRow}>
             {movie.genre && <span style={styles.genreBadge}>{movie.genre}</span>}
-            {movie.language && <span style={styles.languageTag}>{movie.language}</span>}
+            {movie.language && <span style={styles.languageTag}>{movie.language.toUpperCase()}</span>}
             {movie.durationMinutes && (
               <span style={styles.durationTag}>⏱ {formatDuration(movie.durationMinutes)}</span>
             )}
@@ -105,24 +128,38 @@ export const MovieDetails = () => {
           {movie.description && (
             <p style={styles.description}>{movie.description}</p>
           )}
+
+          <div style={styles.metaStrip}>
+            <div style={styles.metaItem}>
+              <span style={styles.metaLabel}>FORMAT:</span>
+              <span style={styles.metaValue}>CINEMA RELEASE</span>
+            </div>
+            <div style={styles.metaItem}>
+              <span style={styles.metaLabel}>ID:</span>
+              <code style={styles.metaCode}>{movie.id}</code>
+            </div>
+          </div>
         </div>
-      </div>
+      </section>
 
       {/* Available Theatres & Shows */}
-      <div style={styles.showsSection}>
+      <section style={styles.showsSection}>
         <div style={styles.sectionHeader}>
-          <h2 style={styles.sectionTitle}>Available Shows & Theatres</h2>
-          <span style={styles.showCount}>
-            {shows.length} {shows.length === 1 ? 'Show' : 'Shows'} Available
+          <div style={styles.sectionTitleBlock}>
+            <span style={styles.sectionSlug}>// SHOWTIMINGS</span>
+            <h2 style={styles.sectionTitle}>AVAILABLE THEATRES & SHOWS</h2>
+          </div>
+          <span style={styles.showCountBadge}>
+            {shows.length} {shows.length === 1 ? 'SHOW' : 'SHOWS'} SCHEDULED
           </span>
         </div>
 
         {shows.length === 0 ? (
           <div style={styles.emptyShows}>
             <div style={styles.emptyIcon}>🎟️</div>
-            <h3 style={styles.emptyTitle}>No Shows Scheduled</h3>
+            <h3 style={styles.emptyTitle}>NO SHOWS SCHEDULED</h3>
             <p style={styles.emptySub}>
-              There are currently no scheduled showtimes for this movie. Please check back later!
+              There are currently no scheduled showtimes for this movie in the database.
             </p>
           </div>
         ) : (
@@ -130,7 +167,7 @@ export const MovieDetails = () => {
             {venueNames.map((venueName) => (
               <div key={venueName} style={styles.venueGroup}>
                 <div style={styles.venueHeader}>
-                  <span style={styles.venueIcon}>🏛️</span>
+                  <div style={styles.venueBadge}>VENUE</div>
                   <h3 style={styles.venueTitle}>{venueName}</h3>
                 </div>
 
@@ -143,119 +180,207 @@ export const MovieDetails = () => {
             ))}
           </div>
         )}
-      </div>
+      </section>
     </div>
   );
 };
 
 const styles = {
   page: {
-    padding: '30px 0 60px 0',
+    padding: '20px 0 60px 0',
   },
   navBar: {
     marginBottom: '20px',
   },
-  backLink: {
+  backBtn: {
     display: 'inline-flex',
     alignItems: 'center',
     gap: '6px',
-    color: '#bbbbbb',
+    color: '#d0d0dc',
+    backgroundColor: '#141418',
+    border: '1.5px solid #2e2e3a',
+    padding: '8px 14px',
+    borderRadius: '2px',
+    fontSize: '0.82rem',
+    fontWeight: '800',
+    letterSpacing: '0.8px',
+    fontFamily: '"SFMono-Regular", Consolas, monospace',
+    boxShadow: '2px 2px 0px #000000',
     textDecoration: 'none',
-    fontSize: '0.95rem',
-    fontWeight: '500',
   },
   hero: {
-    backgroundColor: '#1b1b1b',
-    border: '1px solid #2b2b2b',
-    borderRadius: '12px',
-    padding: '24px 18px',
+    backgroundColor: '#121216',
+    border: '2px solid #282834',
+    borderRadius: '2px',
+    padding: '28px 24px',
     display: 'flex',
-    gap: '24px',
+    gap: '28px',
     alignItems: 'flex-start',
-    marginBottom: '36px',
+    marginBottom: '40px',
+    boxShadow: '5px 5px 0px #000000',
     flexWrap: 'wrap',
   },
-  heroPoster: {
-    width: '120px',
-    height: '160px',
-    background: 'linear-gradient(135deg, #2c1a1d 0%, #171717 100%)',
-    borderRadius: '8px',
+  posterContainer: {
+    width: '160px',
+    height: '230px',
+    borderRadius: '2px',
+    overflow: 'hidden',
+    border: '2px solid #2e2e3a',
+    boxShadow: '3px 3px 0px #000000',
+    flexShrink: 0,
+    backgroundColor: '#0a0a0c',
+  },
+  heroPosterImg: {
+    width: '100%',
+    height: '100%',
+    objectFit: 'cover',
+    display: 'block',
+  },
+  heroPosterFallback: {
+    width: '100%',
+    height: '100%',
     display: 'flex',
+    flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    border: '1px solid #333333',
-    flexShrink: 0,
+    backgroundColor: '#15151c',
   },
   posterIcon: {
-    fontSize: '3rem',
+    fontSize: '2.5rem',
+    marginBottom: '6px',
+  },
+  fallbackStamp: {
+    fontSize: '0.65rem',
+    fontWeight: '900',
+    letterSpacing: '1px',
+    color: '#e50914',
+    fontFamily: '"SFMono-Regular", Consolas, monospace',
   },
   heroContent: {
     flex: 1,
-    minWidth: '200px',
+    minWidth: '240px',
   },
   badgeRow: {
     display: 'flex',
     alignItems: 'center',
-    gap: '10px',
-    marginBottom: '12px',
+    gap: '8px',
+    marginBottom: '14px',
     flexWrap: 'wrap',
   },
   genreBadge: {
     backgroundColor: '#e50914',
     color: '#ffffff',
-    padding: '3px 10px',
-    borderRadius: '4px',
-    fontSize: '0.8rem',
-    fontWeight: '700',
+    border: '1px solid #e50914',
+    padding: '4px 9px',
+    borderRadius: '2px',
+    fontSize: '0.74rem',
+    fontWeight: '900',
     textTransform: 'uppercase',
+    letterSpacing: '0.8px',
+    boxShadow: '2px 2px 0px #000000',
   },
   languageTag: {
-    backgroundColor: '#2a2a2a',
-    color: '#dddddd',
-    padding: '3px 10px',
-    borderRadius: '4px',
-    fontSize: '0.85rem',
+    backgroundColor: '#1b1b22',
+    border: '1px solid #30303c',
+    color: '#b0b0c0',
+    padding: '4px 9px',
+    borderRadius: '2px',
+    fontSize: '0.74rem',
+    fontWeight: '800',
+    fontFamily: '"SFMono-Regular", Consolas, monospace',
   },
   durationTag: {
-    color: '#aaaaaa',
-    fontSize: '0.9rem',
+    color: '#8e8e9e',
+    fontSize: '0.8rem',
+    fontWeight: '700',
+    fontFamily: '"SFMono-Regular", Consolas, monospace',
   },
   title: {
-    margin: '0 0 14px 0',
-    fontSize: 'clamp(1.5rem, 5vw, 2.2rem)',
-    fontWeight: '800',
+    margin: '0 0 16px 0',
+    fontSize: 'clamp(1.8rem, 4.5vw, 2.6rem)',
+    fontWeight: '900',
     color: '#ffffff',
-    lineHeight: '1.2',
+    lineHeight: '1.15',
+    letterSpacing: '-0.5px',
+    textTransform: 'uppercase',
     wordBreak: 'break-word',
   },
   description: {
-    color: '#bbbbbb',
-    fontSize: '0.96rem',
-    lineHeight: '1.6',
-    margin: 0,
-    maxWidth: '800px',
+    color: '#a4a4b2',
+    fontSize: '0.98rem',
+    lineHeight: '1.65',
+    margin: '0 0 20px 0',
+    maxWidth: '820px',
     wordBreak: 'break-word',
   },
+  metaStrip: {
+    display: 'flex',
+    gap: '16px',
+    flexWrap: 'wrap',
+    paddingTop: '14px',
+    borderTop: '1px solid #22222c',
+    fontSize: '0.76rem',
+    fontFamily: '"SFMono-Regular", Consolas, monospace',
+  },
+  metaItem: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '6px',
+  },
+  metaLabel: {
+    color: '#606070',
+    fontWeight: '800',
+  },
+  metaValue: {
+    color: '#d0d0dc',
+    fontWeight: '700',
+  },
+  metaCode: {
+    color: '#ff9800',
+    fontSize: '0.75rem',
+  },
   showsSection: {
-    marginTop: '20px',
+    marginTop: '10px',
   },
   sectionHeader: {
     display: 'flex',
-    alignItems: 'center',
+    alignItems: 'flex-end',
     justifyContent: 'space-between',
-    borderBottom: '1px solid #2a2a2a',
-    paddingBottom: '12px',
-    marginBottom: '24px',
+    borderBottom: '2px solid #262632',
+    paddingBottom: '14px',
+    marginBottom: '26px',
+    flexWrap: 'wrap',
+    gap: '12px',
+  },
+  sectionTitleBlock: {
+    display: 'flex',
+    flexDirection: 'column',
+    gap: '4px',
+  },
+  sectionSlug: {
+    fontSize: '0.75rem',
+    fontWeight: '800',
+    color: '#e50914',
+    letterSpacing: '1px',
+    fontFamily: '"SFMono-Regular", Consolas, monospace',
   },
   sectionTitle: {
-    fontSize: '1.4rem',
-    fontWeight: '700',
+    fontSize: '1.5rem',
+    fontWeight: '900',
     color: '#ffffff',
     margin: 0,
+    letterSpacing: '-0.3px',
   },
-  showCount: {
-    color: '#888888',
-    fontSize: '0.9rem',
+  showCountBadge: {
+    backgroundColor: '#181820',
+    border: '1.5px solid #323242',
+    color: '#b0b0c2',
+    padding: '6px 12px',
+    borderRadius: '2px',
+    fontSize: '0.75rem',
+    fontWeight: '800',
+    fontFamily: '"SFMono-Regular", Consolas, monospace',
+    boxShadow: '2px 2px 0px #000000',
   },
   venueGroups: {
     display: 'flex',
@@ -263,27 +388,37 @@ const styles = {
     gap: '24px',
   },
   venueGroup: {
-    backgroundColor: '#161616',
-    border: '1px solid #282828',
-    borderRadius: '10px',
-    padding: '20px',
+    backgroundColor: '#121216',
+    border: '2px solid #282834',
+    borderRadius: '2px',
+    padding: '24px',
+    boxShadow: '4px 4px 0px #000000',
   },
   venueHeader: {
     display: 'flex',
     alignItems: 'center',
     gap: '10px',
-    marginBottom: '16px',
-    borderBottom: '1px solid #242424',
-    paddingBottom: '10px',
+    marginBottom: '18px',
+    borderBottom: '1.5px solid #22222c',
+    paddingBottom: '12px',
   },
-  venueIcon: {
-    fontSize: '1.1rem',
+  venueBadge: {
+    backgroundColor: '#20202a',
+    color: '#e50914',
+    border: '1px solid #323242',
+    padding: '3px 8px',
+    fontSize: '0.68rem',
+    fontWeight: '900',
+    letterSpacing: '1px',
+    borderRadius: '2px',
+    fontFamily: '"SFMono-Regular", Consolas, monospace',
   },
   venueTitle: {
     margin: 0,
-    fontSize: '1.15rem',
+    fontSize: '1.25rem',
     color: '#ffffff',
-    fontWeight: '700',
+    fontWeight: '800',
+    letterSpacing: '-0.2px',
   },
   showsList: {
     display: 'flex',
@@ -293,9 +428,9 @@ const styles = {
   emptyShows: {
     textAlign: 'center',
     padding: '60px 20px',
-    backgroundColor: '#181818',
-    borderRadius: '10px',
-    border: '1px dashed #333333',
+    backgroundColor: '#121216',
+    borderRadius: '2px',
+    border: '2px dashed #2e2e3c',
   },
   emptyIcon: {
     fontSize: '2.5rem',
@@ -304,10 +439,12 @@ const styles = {
   emptyTitle: {
     color: '#ffffff',
     margin: '0 0 8px 0',
+    fontWeight: '800',
+    letterSpacing: '0.5px',
   },
   emptySub: {
-    color: '#888888',
-    fontSize: '0.95rem',
+    color: '#828292',
+    fontSize: '0.92rem',
     margin: 0,
   },
   notFound: {
