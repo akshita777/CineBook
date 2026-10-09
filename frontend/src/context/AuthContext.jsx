@@ -26,7 +26,12 @@ export const AuthProvider = ({ children }) => {
     const storedUser = getStoredUser();
 
     if (token && storedUser) {
-      setUser(storedUser);
+      const normalizedUser = {
+        ...storedUser,
+        id: storedUser.id || storedUser.userId,
+        userId: storedUser.userId || storedUser.id,
+      };
+      setUser(normalizedUser);
     } else {
       removeStoredToken();
       setUser(null);
@@ -44,6 +49,7 @@ export const AuthProvider = ({ children }) => {
     // authData contains: { token, tokenType, userId, email, fullName, roles }
     setStoredToken(authData.token);
     const userInfo = {
+      id: authData.userId,
       userId: authData.userId,
       email: authData.email,
       fullName: authData.fullName,

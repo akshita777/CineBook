@@ -55,20 +55,26 @@ export const SeatSelection = () => {
       countdownTimerRef.current = null;
     }
 
-    if (!lockData || !lockData.expiresAt) {
+    if (!lockData) {
       setTimeLeft(null);
       return;
     }
 
-    const targetTime = new Date(lockData.expiresAt).getTime();
+    // Determine target expiration time:
+    // Prefer using ttlSeconds (e.g. 300) relative to client time when lock was acquired,
+    // which prevents any clock skew or timezone mismatch between client and backend.
+    const ttlSeconds = lockData.ttlSeconds != null ? lockData.ttlSeconds : 300;
+    const targetTime = Date.now() + ttlSeconds * 1000;
 
     const updateCountdown = () => {
       const remainingSeconds = Math.max(0, Math.floor((targetTime - Date.now()) / 1000));
       setTimeLeft(remainingSeconds);
 
       if (remainingSeconds <= 0) {
-        clearInterval(countdownTimerRef.current);
-        countdownTimerRef.current = null;
+        if (countdownTimerRef.current) {
+          clearInterval(countdownTimerRef.current);
+          countdownTimerRef.current = null;
+        }
         setLockData(null);
         setSelectedSeatIds([]);
         setExpiredMessage(
@@ -133,7 +139,7 @@ export const SeatSelection = () => {
 
     try {
       const response = await seatApi.lockSeats({
-        userId: user?.id,
+        userId: user?.id || user?.userId,
         showId,
         showSeatIds: selectedSeatIds,
       });
@@ -190,6 +196,7 @@ export const SeatSelection = () => {
         lockedSeatIds: lockData.lockedSeatIds,
         lockToken: lockData.lockToken,
         expiresAt: lockData.expiresAt,
+        ttlSeconds: timeLeft || 300,
         selectedSeats,
         totalPrice,
       },

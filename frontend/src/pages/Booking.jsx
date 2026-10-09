@@ -21,16 +21,25 @@ export const Booking = () => {
   const timerRef = useRef(null);
 
   useEffect(() => {
-    if (!bookingState?.expiresAt) return;
+    if (!bookingState) return;
 
-    const targetTime = new Date(bookingState.expiresAt).getTime();
+    const remainingSec = bookingState.ttlSeconds != null
+      ? bookingState.ttlSeconds
+      : bookingState.expiresAt
+      ? Math.max(0, Math.floor((new Date(bookingState.expiresAt).getTime() - Date.now()) / 1000))
+      : 300;
+
+    const targetTime = Date.now() + remainingSec * 1000;
 
     const updateTimer = () => {
       const remainingSeconds = Math.max(0, Math.floor((targetTime - Date.now()) / 1000));
       setTimeLeft(remainingSeconds);
 
       if (remainingSeconds <= 0) {
-        clearInterval(timerRef.current);
+        if (timerRef.current) {
+          clearInterval(timerRef.current);
+          timerRef.current = null;
+        }
         setError('Your seat lock has expired. The seats have been released. Please return to seat selection.');
       }
     };
@@ -97,7 +106,7 @@ export const Booking = () => {
 
     try {
       const response = await bookingApi.createBooking({
-        userId: user?.id,
+        userId: user?.id || user?.userId,
         showId: bookingState.showId,
         showSeatIds: bookingState.lockedSeatIds,
         lockToken: bookingState.lockToken,
