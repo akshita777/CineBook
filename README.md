@@ -417,47 +417,6 @@ In this application:
 
 ---
 
-## Practical Demonstration Walkthrough (for Interviewers & Reviewers)
-
-To demonstrate the full-stack system live during an interview:
-
-1. **Authentication & Guest Mode**:
-   - Navigate to `http://localhost:5173`.
-   - Observe guest browsing state. Click **Sign In** or **Register** to create a test user (`alice@example.com` / `Password123!`).
-   - Notice JWT stored securely in `localStorage` and dynamic navbar greeting.
-
-2. **Catalog & Show Hierarchy**:
-   - Browse movies loaded directly from PostgreSQL (`Interstellar`, `Inception`, `Oppenheimer`).
-   - Click **View Shows** on a movie to view scheduled venues (`PVR Forum Mall`, `INOX Nexus Mall`) and screens.
-
-3. **Interactive Seat Map & Distributed Locking**:
-   - Click **Select Seats** on a show to view the interactive cinema screen and seat layout.
-   - Select multiple seats (e.g., A1, A2). Click **Lock & Reserve**.
-   - Notice the Redis lock token acquired in-memory and the **5-minute live countdown timer** that appears.
-
-4. **Real Concurrency & Conflict Demonstration**:
-   - Open a secondary incognito window or alternate browser.
-   - Log in as a different user (or run a curl request) and attempt to select the same seats.
-   - Observe immediate conflict handling (**HTTP 409 Conflict**): the system prevents the competing user from securing the same seats, demonstrating zero double bookings.
-
-5. **Checkout & E-Ticket Generation**:
-   - Return to the original session and click **Continue to Booking**.
-   - Review movie, venue, showtime, selected seats, and remaining lock time.
-   - Choose a simulated payment method and click **Confirm & Pay**.
-   - View the generated **Digital Cinema E-Ticket** featuring booking reference, showtime details, seat pills, and print ticket action.
-
-6. **Direct Refresh & Security Authorization Guard**:
-   - Refresh the confirmation URL (`/confirmation/:id`). Notice resilient recovery via `GET /api/bookings/{id}`.
-   - In the secondary browser (logged in as User B), attempt to access User A's confirmation URL.
-   - Observe immediate **HTTP 403 Forbidden** denial enforced by Spring Security and `SecurityUtils`.
-
-7. **Cancellation & Inventory Release**:
-   - Click **My Bookings** in the navbar to view all active reservations.
-   - Click **Cancel Reservation**, confirm in the modal dialog.
-   - Return to the seat selection page: observe that the cancelled seats have instantly returned to **Available** in real-time.
-
----
-
 ## API Reference & Swagger UI
 
 Interactive Swagger documentation is available at:
@@ -490,15 +449,3 @@ http://localhost:8080/v3/api-docs
 
 ---
 
-## Resume-Ready Bullet Points
-
-Here are impactful, metrics-driven bullet points formatted for a Senior / Staff Software Engineer resume:
-
-- **Engineered a high-concurrency ticket booking engine in Java 21 & Spring Boot 3**, verified against 100 concurrent booking attempts for the same seat with zero double bookings using a multi-tiered concurrency architecture.
-- **Implemented a two-phase concurrency model** combining an ephemeral Redis distributed lock (`SET NX EX` with atomic Lua releases) and PostgreSQL pessimistic row locking (`SELECT FOR UPDATE`) with deterministic lexicographical lock ordering to prevent circular-wait deadlocks.
-- **Designed short transaction boundaries** by isolating payment gateway execution from database row locks, preventing connection pool exhaustion and keeping lock hold times strictly confined to state transitions.
-- **Built an event-driven notification pipeline using Apache Kafka**, utilizing post-commit publishing and database-backed consumer deduplication to ensure strictly idempotent processing across duplicate event deliveries.
-- **Developed a responsive CineBook single-page web application (React 18, Vite)** featuring real-time Redis seat map visualization, 5-minute countdown timers, optimistic status badge rendering, and print-ready digital E-tickets.
-- **Enforced zero-trust security and resource ownership** with Spring Security 6 stateless JWT authentication, validating user identity across booking viewing, seat locking, and cancellation to block unauthorized cross-user tampering (HTTP 403).
-- **Authored a comprehensive 44-test integration and stress test suite** simulating 100-thread single-seat races, 60-thread overlapping seat combinations, Redis lock rollbacks, and lock TTL expiration edge cases.
-- **Containerized the modular monolith using Docker and multi-stage Docker Compose** with PostgreSQL, Redis, and Kafka in KRaft mode, including externalized secrets and production JVM tuning.
